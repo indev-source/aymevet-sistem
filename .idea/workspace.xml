@@ -133,7 +133,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../pagina" />
     <property name="nodejs_package_manager_path" value="yarn" />
   </component>
   <component name="RunManager">
@@ -166,7 +166,8 @@
       <updated>1578583491925</updated>
       <workItem from="1578583499640" duration="24645000" />
       <workItem from="1578676083096" duration="7354000" />
-      <workItem from="1578689698037" duration="1208000" />
+      <workItem from="1578689698037" duration="1326000" />
+      <workItem from="1579106358038" duration="1175000" />
     </task>
     <servers />
   </component>
@@ -174,14 +175,18 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="740" y="278" key="FileChooserDialogImpl" timestamp="1579108174888">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="740" y="278" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1579108174888" />
     <state x="795" y="452" key="NewPhpFileDialog" timestamp="1578611993759">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="795" y="452" key="NewPhpFileDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1578611993759" />
-    <state x="667" y="348" key="com.intellij.ide.util.TipDialog" timestamp="1578689707450">
+    <state x="667" y="348" key="com.intellij.ide.util.TipDialog" timestamp="1579107589938">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="667" y="348" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1578689707450" />
+    <state x="667" y="348" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1579107589938" />
     <state x="616" y="240" key="run.anything.popup" timestamp="1578609830556">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
