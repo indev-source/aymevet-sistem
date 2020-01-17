@@ -2,88 +2,83 @@
 @section('title',Auth::user()->name)
 @section('content')
 <div class="row">
-	<div class="col-lg-4 col-md-5">
+	<div class="col-md-5 col-lg-4 col-sm-12 col-xs-12">
 		<div class="card card-user">
 			<div class="image">
-				<img src="https://previews.123rf.com/images/mikalaimanyshau/mikalaimanyshau1601/mikalaimanyshau160100083/50304057-colourful-shopping-vector-flat-banner-for-your-business-web-sites-etc-quality-design-illustrations-e.jpg" alt="..."/>
+				<img src="{{asset('banner-profile.jpg')}}" alt="..."/>
 			</div>
 			<div class="content">
 				<div class="author">
-					<img class="avatar border-white" src="https://previews.123rf.com/images/mikalaimanyshau/mikalaimanyshau1601/mikalaimanyshau160100083/50304057-colourful-shopping-vector-flat-banner-for-your-business-web-sites-etc-quality-design-illustrations-e.jpg" alt="..."/>
-					<h4 class="title">{{$user->name}}<br />
-						<a href="#"><small>{{$user->rol}}</small></a>
-					</h4>
+					<img class="avatar border-white" src="{{asset('default.png')}}" alt="..."/>
+					<h4 class="title text-uppercase">{{$user->name}}</h4>
 				</div>
-				<p class="description text-center">
-					Bodega
-				</p>
-				<p class="description text-center">
-					<span class="label label-success">{{$user->status}}</span>
-				</p>
 			</div>
-			<hr>
-			
 		</div>
-		
 	</div>
-	<div class="col-lg-8 col-md-7">
+	<div class="col-md-7 col-lg-7 col-sm-12 col-xs-12">
+		@include('alerts.alert-success')
 		<div class="card">
 			<div class="header">
-				<h4 class="title">Editar datos</h4>
+				<h4 class="title text-uppercase">actualizar datos</h4>
 			</div>
 			<div class="content">
-				<form action="{{asset('dashboard/v/admin/usuarios/'.$user->id)}}" method="post">
-					@csrf
-					{{method_field('put')}}  
-					<div class="row">
-						<div class="col-md-5">
+				<div class="row">
+					<form action="{{asset('administrador/usuarios/'.$user->id)}}" method="post" class="padding-form">
+						@csrf
+						{{method_field('put')}}
+						<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
 							<div class="form-group">
-								<label>Nombre</label>
-								<input type="text" required="" class="form-control border-input" name="name"  value="{{$user->name}}">
+								<label for="">Nombre del empleado</label>
+								<input type="text" class="form-control" name="name" value="{{$user->name}}">
 							</div>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
 							<div class="form-group">
-								<label>Celular</label>
-								<input type="text" required="" class="form-control border-input" name="celular" value="{{$user->celular}}">
+								<label for="">Celular del empleado</label>
+								<input type="text" class="form-control" name="celular" value="{{$user->celular}}">
 							</div>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
 							<div class="form-group">
-								<label for="exampleInputEmail1">Email</label>
-								<input type="email" required="" class="form-control border-input" name="email" value="{{$user->email}}">
+								<label for="">Correo electronico del empleado</label>
+								<input type="text" class="form-control" name="email" value="{{$user->email}}">
 							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
+						<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
 							<div class="form-group">
-								<label>Sucursal</label>
-								<select name="bussine_id" required="" class="form-control" id="">
-									<option value="{{$user->bussine_id}}">Bodega</option>
+								<label for="">Rol: <span class="color-primary text-uppercase">{{$user->rol}}</span></label>
+								<a href="" class="btn btn-primary form-control">Volverlo administrador</a>
+							</div>
+						</div>
+						<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+							<div class="form-group">
+								<label for="">Ruta del vendedor</label>
+								<select name="bussine_id" id="" class="form-control">
+									<option value="{{$user->business->id}}">{{$user->business->nombre}}</option>
+									@foreach($bussines as $bs)
+										<option value="{{$bs->id}}">{{$bs->nombre}}</option>
+									@endforeach
 								</select>
 							</div>
 						</div>
-					</div>
-
-					<div class="row">
 						
-						<div class="col-md-6">
+						<button class="btn btn-primary"><span class="fa fa-edit"></span> Actualizar datos</button>
+					</form>
+				</div>
+				<hr>
+				<div class="row">
+					<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+						<form action="{{asset('administrador/usuarios/password-update/'.$user->id)}}" method="POST">
+							@csrf
+							{{method_field('put')}}
 							<div class="form-group">
-								<label>Rol</label>
-								<select name="rol" required="" class="form-control"  id="">
-									<option value="{{$user->rol}}">{{$user->rol}}</option>
-									<option value="administrador">Administrador</option>
-									<option value="vendedor">Vendedor</option>
-								</select>
+								<label for="">Actualizar contraseña</label>
+								<input type="password" class="form-control" name="password" required>
 							</div>
-						</div>
+							<button class="btn btn-primary"><span class="fa fa-lock"></span> Actualizar</button>
+						</form>
 					</div>
-					<div class="text-center">
-						<button type="submit" class="btn btn-info btn-fill btn-wd">Actualizar Credenciales</button>
-					</div>
-					<div class="clearfix"></div>
-				</form>
+				</div>
 			</div>
 		</div>
 	</div>

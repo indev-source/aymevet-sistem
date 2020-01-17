@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix'=>'dashboard/v/admin'],function(){
 	Route::get('/','DashBoardController@index')->middleware('userRol');
 	Route::resource('/usuarios','UsuariosController');
-	Route::get('/perfil/{id?}','UsuariosController@profile');
+	
 	Route::get('usuario/{buscar?}','UsuariosController@search');
 	Route::resource('/sucursales','BussinesController')->middleware('userRol');
 	Route::resource('/productos','ProductsController');
@@ -85,6 +85,7 @@ Route::get('traspasos-realizados','TraspasosController@realizados');
 Route::get('traspasos-recibidos','TraspasosController@recibidos');
 Route::get('traspasos-autorizados','TraspasosController@autorizados');
 Route::get('seleccionar-sucursales','TraspasosController@seleccionarSucursal');
+
 Route::group(['prefix'=>'administrador','middleware'=>'auth'],function(){
 
 	Route::resource('productos','ProductsController');
@@ -150,11 +151,14 @@ Route::get('productos','ProductsController@api');
 Route::post('agregar-pago','CreditController@agregarPago');
 
 
-//cualquier rol puede visualizarlo
+Route::get('perfil','UsuariosController@profile');
+Route::put('administrador/usuarios/password-update/{usuario_id}','UsuariosController@password');
+
 Route::get('productos-categoria/{categoria?}','ProductsController@category');
 Route::get('productos-marca/{marca?}','ProductsController@brand');
 Route::get('productos-proveedor/{proveedor?}','ProductsController@provider');
 Route::get('productos-sucursal/{sucursal?}','ProductsController@business');
+Route::get('filtrar','ProductsController@search');
 
 Route::get('ventas-menu','SalesController@menu');
 Route::get('vender','SalesController@toSell');
@@ -163,4 +167,6 @@ Route::get('ventas-cliente/{cliente?}','SalesController@customer');
 Route::resource('pagos','PayController')->only('store','destroy');
 
 Route::resource('clientes', 'ClientesController');
+
+
 

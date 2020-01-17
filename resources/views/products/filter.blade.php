@@ -1,47 +1,62 @@
-<form action="{{asset('administrador/productos')}}" method="get">
-	<div class="row">	
-		<div class="col-md-3">
-			<label for="">Buscar producto por categoria</label>
-			<select class="form-control" name="categoria" id="">
-				<option selected="" value="0">Todas las categorias</option>
-				@foreach($categories as $category)
-					<option  value="{{$category->id}}">{{$category->nombre}}</option>
-				@endforeach
-			</select>
-		</div>
-		<div class="col-md-3">
-			<label for="">Buscar producto por marca</label>
-			<select class="form-control" name="categoria" id="">
-				<option selected=""  value="0">Todas las marcas</option>
-				@foreach($brands as $brand)
-				<option value="{{$brand->id}}">{{$brand->nombre}}</option>
-				@endforeach
-			</select>
-		</div>
-		<div class="col-md-3">
-			<label for="">Buscar producto por proveedor</label>
-			<select class="form-control" name="categoria" id="">
-				<option selected="" value="0">Todas los proveedores</option>
-				@foreach($providers as $providers)
-					<option  value="{{$providers->id}}">{{$providers->nombre_completo}}</option>
-				@endforeach
-			</select>
-		</div>
-		@if(Auth::user()->rol == 'administrador')
-		<div class="col-md-3">
-			<label for="">Buscar productos por sucursal</label>
-			<select class="form-control" name="bussine" id="">
-				<option selected=""  value="0">Todas las sucursales</option>
-				@foreach($bussines as $bussine)
-					<option value="{{$bussine->id}}">{{$bussine->nombre}}</option>
-				@endforeach
-			</select>
-		</div>
-		@endif
-		<div class="col-md-12">
-			<div class="form-group category">
-				<button type="submit" class="btn btn-success">Filtar</button>
+<div class="card">
+	<div class="header">
+		<h4 class="text-uppercase title">filtrar datos</h4>
+	</div>
+	<div class="content">
+		<form action="{{asset('filtrar')}}" method="GET">
+			@csrf
+			<div class="row">
+				<div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+					<div class="form-group">
+						<label for="">Categoria</label>
+						<select class="form-control" name="categoria" id="">
+							<option value="" selected>Selecciona una categoria</option>
+							@foreach($categoriesFilter as $category)
+								<option value="{{$category->id}}">{{$category->nombre}}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+					<div class="form-group">
+						<label for="">Proveedor</label>
+						<select class="form-control" name="proveedor" id="">
+							<option value="" selected>Selecciona un proovedor</option>
+							@foreach($providersFilter as $provider)
+								<option value="{{$provider->id}}">{{$provider->nombre_completo}}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+					<div class="form-group">
+						<label for="">Marca</label>
+						<select class="form-control" name="marca" id="">
+							<option value="" selected>Selecciona una marca</option>
+							@foreach($brandFilter as $brand)
+								<option value="{{$brand->id}}">{{$brand->nombre}}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+					<div class="form-group">
+						<label for="">Ruta</label>
+						<select class="form-control" name="ruta" id="">
+							<option value="" selected>Selecciona una ruta</option>
+							@foreach($businessFilter as $business)
+								<option value="{{$business->id}}">{{$business->nombre}}</option>
+							@endforeach
+						</select>
+					</div>
+				</div>
+				<div class="col-md-12 col-xs-12 col-sm-12 text-center">
+					<button class="btn btn-success"><span class="fa fa-search"></span> Buscar</button>
+				</div>
 			</div>
-		</div>
-	</div>	
-</form>
+		</form>
+	</div>
+	<div class="content">
+		<h5 class="text-uppercase color-green">{{$products->count()}} producto(s) contrados | <a  href="/administrador/productos" class="color-green">ver todos</a></h5>
+	</div>
+</div>

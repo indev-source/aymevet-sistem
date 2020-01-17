@@ -51,6 +51,7 @@ class SalesController extends Controller{
         $saleId = \Session::get ('orderID');
 
         $sale = $saleObj->getSaleById($saleId);
+        
         $sale->total = $sale->total();
         $sale->tipo_venta = $request->tipo_venta;
         $sale->estatus    = "terminado";

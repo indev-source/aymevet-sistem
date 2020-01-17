@@ -179,6 +179,7 @@ return [
         App\Providers\GlobalProductsServices::class,
         App\Providers\TraspasoServices::class,
         App\Providers\BusineProvider::class,
+        App\Providers\FilterProvider::class,
 
     ],
 

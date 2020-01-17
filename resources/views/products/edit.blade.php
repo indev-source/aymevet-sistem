@@ -17,11 +17,6 @@
 				@csrf
 				<button class="btn btn-danger">Dar de baja</button>
 			</form>
-			<form action="{{asset('dashboard/v/admin/productos/'.$product->id)}}" class="btn-margin" style="margin:5px;" method="post">
-				{{method_field('delete')}}
-				@csrf
-				<button type="submit" class="btn btn-danger">Eliminar producto</button>
-			</form>
 		</div>
 		<div class="content content-form table-responsive table-full-width">
 			<form action="{{asset('administrador/productos/'.$product->id)}}" method="post">

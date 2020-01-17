@@ -18,6 +18,7 @@
         <link href="{{asset('assets/css/themify-icons.css')}}" rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+        
         <style>
             ul.nav>li.active > a{
                 color:#243882 !important;
@@ -174,15 +175,10 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <i class=" ti-user"></i>
-                                        <p>Perfil</p>
+                                        <p>{{Auth::user()->name}}</p>
                                         <b class="caret"></b>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a>
-                                            <i class="ti-user"></i> {{Auth::user()->name}}
-                                            </a>
-                                        </li>
                                         <li>
                                             <a href="">
                                             <i class="ti-home"></i> Sucursal {{Auth::user()->bussine->nombre}}
@@ -194,8 +190,8 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{asset(Auth::user()->rol.'/perfil?id='.Auth::user()->id)}}">
-                                            <i class="ti-files"></i> Editar datos
+                                            <a href="{{asset('perfil?empleado='.Auth::user()->id)}}">
+                                            <i class="ti-files"></i> Perfil
                                             </a>
                                         </li>
                                     </ul>
