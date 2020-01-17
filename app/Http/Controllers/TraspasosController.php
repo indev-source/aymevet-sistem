@@ -10,33 +10,23 @@ use App\ProductoTraspaso;
 use DB;
 use Auth;
 use App\User;
+
+use App\models\TraspasoRepository;
+use App\models\BusinessRepository;
+use App\models\ProductRepository;
 class TraspasosController extends Controller{
 
-    public function index(){
-        $traspasos = Traspaso::get();
+    public function __construct(TraspasoRepository $traspaso, ProductRepository $product){
+        $this->traspaso = $traspaso;
+        $this->product  = $product;
+    }
+    public function index(Request $request){
+        $traspasos = $this->traspaso->traspasos()->getByStatus($request->estatus)->get();
         return view('traspasos.index',compact('traspasos'));
     }
-    public function menu(){
-        return view('traspasos.menu');
-    }
-    public function realizados(){
-        $sucursalId = Auth::user()->bussine_id;
-        $traspasos  = Traspaso::traspasos()->onlySend($sucursalId)->get();
-        return view('traspasos.realizados',compact('traspasos'));
-    }
-    public function recibidos(){
-        $sucursalId = Auth::user()->bussine_id;
-        $traspasos  = Traspaso::traspasos()->onlyRecibed($sucursalId)->get();
-        return view('traspasos.recibidos',compact('traspasos'));
-    }
-    public function autorizados(){
-        $sucursalId = Auth::user()->bussine_id;
-        $traspasos  = Traspaso::traspasos()->onlyAutorizate($sucursalId)->get();
-        return view('traspasos.autorizados',compact('traspasos'));
-    }
-    public function seleccionarSucursal(){
-        $bussines = Bussine::where('id','<>',Auth::user()->bussine_id)->paginate(10);
-        return view('traspasos.seleccionar-sucursal',compact('bussines'));
+    public function create(){
+        $products = $this->product->getProducts('activos')->business(Auth::user()->bussine_id)->get();
+        return view('traspasos.create',['business'=>BusinessRepository::all(),'products'=>$products]);
     }
     public function show($id){
         $traspaso = Traspaso::find($id);
@@ -72,9 +62,6 @@ class TraspasosController extends Controller{
         $traspaso->save();
         $msg = "los productos fueros agregados a la sucursal: ".$traspaso->srecibe->nombre." satisfactoriamente";
         return back()->with("status_success",$msg);
-    }
-    public function create(){
-        return view('traspasos.create',compact('products'));
     }
     public function store(Request $request){
         $traspaso = new Traspaso;

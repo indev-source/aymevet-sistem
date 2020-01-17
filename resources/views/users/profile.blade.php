@@ -13,6 +13,18 @@
 					<h4 class="title text-uppercase">{{$user->name}}</h4>
 				</div>
 			</div>
+			<div class="content">
+				<div class="row">
+					<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+						<div class="card">
+							<div class="card-title"><h5 class="title text-uppercase text-center">Ventas</h5></div>
+							<div class="content">
+								<img src="{{asset('sale.png')}}" class="img-width-total cursor-pointer" alt="">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-7 col-lg-7 col-sm-12 col-xs-12">
@@ -82,7 +94,5 @@
 			</div>
 		</div>
 	</div>
-
-
 </div>
 @stop

@@ -12,7 +12,7 @@
 			<h4 class="title">Actualizar Producto</h4>
 		</div> <hr>
 		<div class="dis-flex" style="display: flex; margin-left: 20px;">
-			<form action="{{asset('administrador/productos/'.$product->id)}}" class="btn-margin" style="margin:5px;">
+			<form action="{{asset('administrador/productos/'.$product->id)}}" method="POST" class="btn-margin" style="margin:5px;">
 				{{method_field('delete')}}
 				@csrf
 				<button class="btn btn-danger">Dar de baja</button>
@@ -45,7 +45,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<label for="">Existencia en bodega</label>
-						<input type="number" min="1" value="{{$product->existencia}}" required class="form-control {{ $errors->has('existencia') ? ' is-invalid' : '' }}" name="existencia" placeholder="Ingresa la existencia del producto en inventario">
+						<input type="number" min="1" disabled value="{{$product->existencia}}" required class="form-control {{ $errors->has('existencia') ? ' is-invalid' : '' }}" name="existencia" placeholder="Ingresa la existencia del producto en inventario">
 						@if ($errors->has('existencia'))
 							<span class="invalid-feedback" role="alert">
 								<strong>{{ $errors->first('existencia') }}</strong>

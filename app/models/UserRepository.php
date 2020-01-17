@@ -18,6 +18,10 @@ class UserRepository extends Model
     public function editUser($data){
         return $this->fill($data)->save();
     }
+    public function editPassword($password){
+        $this->password = $password;
+        return $this->save();
+    }
     public function scopeUsers($query,$status){
         return $query->where('status',$status);
     }

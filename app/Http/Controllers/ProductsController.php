@@ -50,6 +50,7 @@ class ProductsController extends Controller{
     }
     public function search(Request $request){
         $products = $this->products()->search($request)->get();
+        alert()->success($products->count().'Producto(s) encontrados');
         return view('products.index',['products'=>$products,'msg'=>'Inventario general']);
     }
 
@@ -57,27 +58,33 @@ class ProductsController extends Controller{
     public function store(ProductRequestStore $request, ProductRepository $product){
         try{
             $response = $product->createProduct($request->all());
-            return redirect('administrador/productos')->with('status_success','El producto fue agregado exitosamente');
+            alert()->success('El producto fue agregado exitosamente');
+            return redirect('administrador/productos');
         }catch(\Exception $e){
-            return back()->with('status_warning',$e->getMessage());
+            alert()->error('Error Message', 'Error en el servidor: '.$e->getMessage());
+            return back();
         }
     }
     //metodo para actualizar productos
     public function update(Request $request, $productId){
         try{
             $this->getProductById($productId)->editProduct($request->all());
-            return redirect('/administrador/productos')->with('status_success','El producto fue actualizado correctamente');
+            alert()->success('El producto fue actualizado correctamente');
+            return redirect('/administrador/productos');
         }catch(\Exception $e){
-            return back()->with('status_warning',$e->getMessage());
+            alert()->error('Error Message', 'Error en el servidor: '.$e->getMessage());
+            return back();
         }
     }
     //metodo para dar de baja productos
     public function destroy($productId){
         try{
             $this->getProductById($productId)->changeStatus('inactivo');
-            return redirect('/administrador/productos')->with('status_success','El producto fue dado de baja correctamente');
+            alert()->success('El producto fue dado de baja correctamente');
+            return redirect('/administrador/productos');
         }catch(\Exception $e){
-            return back()->with('status_warning',$e->getMessage());
+            alert()->error('Error Message', 'Error en el servidor: '.$e->getMessage());
+            return back();
         }
     } 
     //metodo para mostrar la vista de registro de un nuevo producto
@@ -91,8 +98,13 @@ class ProductsController extends Controller{
     }
      //metodo para mostrar la vista de actualizacion de un nuevo producto
     public function edit($productId){
+        $product = $this->getProductById($productId);
+
+        if($product->existencia <= 5)
+            alert()->warning('la cantidad de producto llego al limite minimo en existencia');
+
         return view('products.edit',[
-            'product'=>$this->getProductById($productId),
+            'product'=>$product,
             'business'=>BusinessRepository::all(),
             'categories'=>CategoryRepository::all(), 
             'brands'=> BrandRepository::all(),

@@ -98,8 +98,28 @@
 .card{
     border-radius: 0px !important;
 }
-
-
+.img-width-total{
+  width: 100%;
+}
+.img-width-middle{
+  width: 30%;
+  margin:auto;
+}
+.heigth-300{
+  height: 200px;
+}
+.flex{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.margin-right-sml{
+  margin-right: 5px;
+}
 .padding-form{
   padding: 5px 15px;
+}
+
+.cursor-pointer{
+  cursor:pointer;
 }

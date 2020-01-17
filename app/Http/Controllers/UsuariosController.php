@@ -51,13 +51,12 @@ class UsuariosController extends Controller{
             $this->getUserById($userId)->editUser($request->all());
             return redirect('administrador/usuarios')->with('status_success','Usuario actualizado correctamente');
         }catch(\Exception $e){
-            dd($e);
+            return back()->with('status_warning','Ha ocurrido un error en el servidor: '.$e->getMessage());
         }
     }
     public function password(Request $request,$userId){
         $request->password = $this->encrypter($request->password);
-        //dd($request->password);
-        $this->getUserByid($userId)->editUser($request->all());
+        $this->getUserByid($userId)->editPassword($request->password);
         return back()->with('status_success','la contraseña fue actualizada correctamente');
     }
     public function destroy($id)

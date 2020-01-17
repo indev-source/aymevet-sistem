@@ -80,11 +80,7 @@ Route::post('regresar_traspaso','TraspasosController@regresar');
 
 Route::get('vender','DashBoardController@vender')->middleware('auth');
 
-Route::get('menu-traspasos','TraspasosController@menu');
-Route::get('traspasos-realizados','TraspasosController@realizados');
-Route::get('traspasos-recibidos','TraspasosController@recibidos');
-Route::get('traspasos-autorizados','TraspasosController@autorizados');
-Route::get('seleccionar-sucursales','TraspasosController@seleccionarSucursal');
+
 
 Route::group(['prefix'=>'administrador','middleware'=>'auth'],function(){
 
@@ -151,6 +147,8 @@ Route::get('productos','ProductsController@api');
 Route::post('agregar-pago','CreditController@agregarPago');
 
 
+Route::get('sincronizacion','SyncController@syncMenu');
+
 Route::get('perfil','UsuariosController@profile');
 Route::put('administrador/usuarios/password-update/{usuario_id}','UsuariosController@password');
 
@@ -164,9 +162,18 @@ Route::get('ventas-menu','SalesController@menu');
 Route::get('vender','SalesController@toSell');
 Route::get('ventas-cliente/{cliente?}','SalesController@customer');
 
+//creditos
 Route::resource('pagos','PayController')->only('store','destroy');
 
+//clientes
 Route::resource('clientes', 'ClientesController');
+
+//traspasos
+Route::get('traspasos','TraspasosController@index');
+Route::get('traspasos-realizados','TraspasosController@realizados');
+Route::get('traspasos-recibidos','TraspasosController@recibidos');
+Route::get('traspasos-autorizados','TraspasosController@autorizados');
+Route::get('seleccionar-sucursales','TraspasosController@seleccionarSucursal');
 
 
 
