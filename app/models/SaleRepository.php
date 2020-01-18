@@ -43,6 +43,13 @@ class SaleRepository extends Model
             $product->save();
         }
     }
+    public function addToStock($products){
+        foreach($products as $productSold){
+            $product = ProductRepository::findOrFail($productSold->product_id);
+            $product->existencia +=  $productSold->cantidad;
+            $product->save();
+        }
+    }
     public function getOrCreateSale($saleId){
         if($saleId)
             return $this->getSaleById($saleId);
@@ -72,6 +79,10 @@ class SaleRepository extends Model
     }
     public function scopeCustomers($query,$customerId){
         return $query->where('cliente',$customerId);
+    }
+    public function changeToStatus($status){
+        $this->estatus = $status;
+        return $this->save();
     }
 
 }

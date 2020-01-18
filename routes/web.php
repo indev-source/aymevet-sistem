@@ -164,3 +164,5 @@ Route::resource('pagos','PayController')->only('store','destroy');
 
 Route::resource('clientes', 'ClientesController');
 
+
+

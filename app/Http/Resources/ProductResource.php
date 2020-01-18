@@ -16,14 +16,14 @@ class ProductResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'attributes'=>[
-                'name'=>$this->nombre,
-                'price1'=>$this->precio1,
-                'price2'=>$this->precio2,
-                'price3'=>$this->precio3,
-                'stock'=>$this->existencia
-            ],
-            'relationsships'=>new ProductRelationResource($this),
+            'name'=>$this->nombre,
+            'price1'=>$this->precio1,
+            'price2'=>$this->precio2,
+            'price3'=>$this->precio3,
+            'stock'=>$this->existencia,
+            'categoria'=>$this->categoria->nombre,
+            'ruta'=>$this->sucursal->nombre,
+            'marca'=>$this->marca->nombre
         ];
     }
 }

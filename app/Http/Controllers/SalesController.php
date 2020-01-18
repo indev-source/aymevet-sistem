@@ -23,11 +23,17 @@ use App\models\CreditRepository;
 class SalesController extends Controller{
 
     public function __construct(SaleRepository $sales){
-        $this->middleware('auth');
+        $this->middleware('auth',['except'=>'sincronizar']);
         $this->sales = $sales;
     }
     public function sales(){
         return $this->sales->sales('contado');
+    }
+    public function getSaleById($id){
+        return $this->sales->findOrFail($id);
+    }
+    public function sincronizar(Request $request,$sellerEmail){
+        return response()->json($request,201);
     }
     public function index(){
         $sales = $this->sales()->get();
@@ -106,82 +112,20 @@ class SalesController extends Controller{
             'sale','products','total','discount','dinDiscount','pay','porPay','typePay','bussine','subtotal','user'
         ));
     }
-    public function pagoCredito($request){
-        $cliente = Cliente::find($request->cliente_id);
-        if($cliente->estatus == "deuda")
-            return self::customerWithDeuda($cliente);
-        else
-            return self::pago($request,"credito","debe");
-    }
-    public function customerWithDeuda($cliente){
-        return back()->with('customer_status',"El cliente: ".$cliente->nombre_completo." tiene adeudos");
-    }
-    public function pago($request,$formaPago,$status){
-        $sale = Sale::getOrCreateSale(\Session::get('orderID'));
-        \Session::put('orderID',$sale->id);
-
-        $sale->tipoPago = $request->tipo_pago;
-        $sale->cliente  = $request->cliente_id;
-        $sale->total    = $sale->subtotal();
-        $sale->formaPago = $formaPago;
-        $sale->estatus   = $status;
-        $sale->save();
-        if($formaPago == 'credito'){
-          $credito = new Credit();
-          $credito->user = $sale->vendedor;
-          $credito->sale = $sale->id;
-          $credito->date = now();
-          $credito->client = $request->cliente_id;
-          $credito->status = "no-pagado";
-          $credito->total  = $sale->total;
-          $credito->debe   = $sale->total;
-          $credito->save();
-
-          $cliente = Cliente::find($request->cliente_id);
-          $cliente->estatus = "deuda";
-          $cliente->save();
-        }
-        self::quitarInventario($sale);
-        \Session::remove('orderID');
-        return back();
-    }
-    public function quitarInventario($sale){
-        foreach($sale->products()->get() as $product){
-            $productToUpdate = Product::find($product->productoID);
-            $productToUpdate->existencia -= $product->cantidad;
-            $productToUpdate->save();
-        }
-        return back();
-    }
-
     public function show($id){
-        $sale = Sale::find($id);
+        $sale = $this->getSaleById($id);
         $products = $sale->products()->get();
         return view('sales.show',compact('sale','products'));
     }
-    public function destroy($id)
-    {
-        $sale = Sale::find($id);
-        $sale->status = "cancelado";
-        $sale->save();
+    public function destroy($id){
 
-        //regresar al inventario
-        $products_sale = ProductOrder::join('inventarios','product_orders.product_id','inventarios.id')
-        ->where('product_orders.order_id',$sale->order_id)
-        ->select(
-            'inventarios.nombre as producto',
-            'product_orders.amount',
-            'inventarios.id'
-        )->get();
+        $sale = $this->getSaleById($id);
+        
+        $sale->changeToStatus('cancelado');
 
-
-
-        foreach ($products_sale as $product_sale) {
-            $product = Product::find($product_sale->id);
-            $product->existencia +=$product_sale->amount;
-            $product->save();
-        }
-        return back();
+        $sale->addToStock($sale->products()->get());
+        
+        return redirect('administrador/ventas/'.$id)->with('status_success','La venta fue actualizada correctamente');
     }
 
     public function reporte_venta_dia(){
