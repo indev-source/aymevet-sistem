@@ -23,7 +23,8 @@ class ProductResource extends JsonResource
             'stock'=>$this->existencia,
             'categoria'=>$this->categoria->nombre,
             'ruta'=>$this->sucursal->nombre,
-            'marca'=>$this->marca->nombre
+            'marca'=>$this->marca->nombre,
+            'stock'=>$this->existencia
         ];
     }
 }

@@ -6,14 +6,13 @@
 		<th class="text-center">Categoria</th>
 		<th class="text-center">Marca</th>
 		<th class="text-center">Proveedor</th>
-		<th class="text-center">Sucursal</th>
+		<th class="text-center">Ruta</th>
+		<th class="text-center">Acciones</th>
 	</thead>
 	<tbody>
 		@foreach($products as $product)
 			<tr>
-				<td class="text-center">
-					<a href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/productos/'.$product->id.'/edit' : '#')}}">{{$product->nombre}}</a>
-				</td>
+				<td class="text-center">{{$product->nombre}}</td>
 				<td class="text-center">
 					<span class="label {{$product->existencia <= 5 ? 'label-danger' : 'label-success'}}">{{$product->existencia}}</span>
 				</td>
@@ -22,6 +21,9 @@
 				<td class="text-center">{{$product->marca->nombre}}</td>
 				<td class="text-center">{{$product->proveedor->nombre_completo}}</td>
 				<td class="text-center">{{$product->sucursal->nombre}}</td>
+				<td class="text-center">
+					<a href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/productos/'.$product->id.'/edit' : '#')}}" class="btn btn-sm btn-primary"><span class="fa fa-edit"></span> Actualizar</a>
+				</td>
 			</tr>
 		@endforeach
 	</tbody>

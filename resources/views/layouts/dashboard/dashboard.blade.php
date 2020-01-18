@@ -18,6 +18,7 @@
         <link href="{{asset('assets/css/themify-icons.css')}}" rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+        
         <style>
             ul.nav>li.active > a{
                 color:#243882 !important;
@@ -116,9 +117,7 @@
                                 <i class="ti-share"></i>
                                 <p>
                                 TRASPASOS
-                                @if(Auth::user()->rol != 'administrador')
-                                    ({{count($services_traspaso)}})
-                                @endif</p>
+                               
                             </a>
                         </li>
                         <li>
@@ -156,15 +155,15 @@
                             <span class="icon-bar bar2"></span>
                             <span class="icon-bar bar3"></span>
                             </button>
-                            <a data-toggle="modal" class="btn btn-info btn-block btn-lg" data-target=".bs-example-modal-lg-global" style="width: 400px; !important;">
-                            <i class="ti-search"></i>Consultar inventario global</a>
                         </div>
                         <div class="collapse navbar-collapse">
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
-                                    <a >
-                                        <p></p>
+                                    <a href="{{asset('/sincronizacion')}}">
+                                        <i class="fa fa-refresh"></i>
+                                        <p>Sincronización</p>
                                     </a>
+                                </li>
                                 <li>
                                     <a href="{{asset('vender')}}">
                                         <i class="ti-shopping-cart"></i>
@@ -174,15 +173,10 @@
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         <i class=" ti-user"></i>
-                                        <p>Perfil</p>
+                                        <p>{{Auth::user()->name}}</p>
                                         <b class="caret"></b>
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li>
-                                            <a>
-                                            <i class="ti-user"></i> {{Auth::user()->name}}
-                                            </a>
-                                        </li>
                                         <li>
                                             <a href="">
                                             <i class="ti-home"></i> Sucursal {{Auth::user()->bussine->nombre}}
@@ -194,27 +188,10 @@
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{asset(Auth::user()->rol.'/perfil?id='.Auth::user()->id)}}">
-                                            <i class="ti-files"></i> Editar datos
+                                            <a href="{{asset('perfil?empleado='.Auth::user()->id)}}">
+                                            <i class="ti-files"></i> Perfil
                                             </a>
                                         </li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="ti-share"></i>
-                                        <p>
-                                            Traspasos
-                                            ({{count($services_traspaso)}})
-                                        </p>
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        @if(Auth::user()->rol == 'administrador')
-                                            @include('layouts.dashboard.notificacion_admin')
-                                        @else
-                                            @include('layouts.dashboard.notificacion_vendedor')
-                                        @endif
                                     </ul>
                                 </li>
                                 <li>
@@ -348,6 +325,8 @@
         src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
     <script
         src="https://cdn.datatables.net/buttons/1.1.0/js/buttons.print.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    @include('sweet::alert')
     @yield('js')
 </html>
 

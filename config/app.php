@@ -179,6 +179,8 @@ return [
         App\Providers\GlobalProductsServices::class,
         App\Providers\TraspasoServices::class,
         App\Providers\BusineProvider::class,
+        App\Providers\FilterProvider::class,
+        UxWeb\SweetAlert\SweetAlertServiceProvider::class,
 
     ],
 
@@ -229,6 +231,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Alert' => UxWeb\SweetAlert\SweetAlert::class,
 
     ],
 

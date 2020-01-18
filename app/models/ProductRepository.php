@@ -37,19 +37,27 @@ class ProductRepository extends Model{
         $this->estatus = $status;
         return $this->save();
     }
+    
     public function scopeGetProducts($query){
         return $query->where('estatus','activo');
     }
+    public function scopeSearch($query,$request){
+        return $query->category($request->categoria)->brand($request->marca)->provider($request->proveedor)->business($request->ruta);
+    }
     public function scopeCategory($query,$categoryId){
-        return $query->where('categoria_id',$categoryId);
+        if($categoryId)
+            return $query->where('categoria_id',$categoryId);
     }
     public function scopeBrand($query,$brandId){
-        return $query->where('marca_id',$brandId);
+        if($brandId)
+            return $query->where('marca_id',$brandId);
     }
     public function scopeProvider($query,$providerId){
-        return $query->where('proveedor_id',$providerId);
+        if($providerId)
+            return $query->where('proveedor_id',$providerId);
     }
     public function scopeBusiness($query,$businessId){
-        return $query->where('bussine_id',$businessId);
+        if($businessId)
+            return $query->where('bussine_id',$businessId);
     }
 }

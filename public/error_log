@@ -1,3 +1,0 @@
-[18-May-2019 00:38:11 UTC] PHP Warning:  require(/home/italcom/public_html/aymevet.com/../vendor/autoload.php): failed to open stream: No such file or directory in /home/italcom/public_html/aymevet.com/index.php on line 24
-[18-May-2019 00:38:11 UTC] PHP Fatal error:  require(): Failed opening required '/home/italcom/public_html/aymevet.com/../vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php56/root/usr/share/pear') in /home/italcom/public_html/aymevet.com/index.php on line 24
-[18-May-2019 00:39:14 UTC] PHP Parse error:  syntax error, unexpected '?' in /home/italcom/aplicacion-eymevet/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php on line 500

@@ -27,7 +27,7 @@ class UserStoreRequest extends FormRequest
             'name' => 'required|max:100',
             'celular'=>'required|max:10',
             'email'=>'required',
-            'password'=>'required',
+            'password'=>'required|min:8',
             'rol'=>'required',
             'bussine_id'=>'required',
             'comision'=>'required',

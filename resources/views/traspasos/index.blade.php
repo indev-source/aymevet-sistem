@@ -2,18 +2,20 @@
 @section('title','Traspasos')
 @section('content')
 <div class="col-md-12">
-	<a href="{{asset('dashboard/seleccionar-sucursal')}}" class="float">
-		<i class="fa fa-plus my-float"></i>
-	</a>
-	@if (session('status_success'))
-        <div class="alert alert-success">
-            {!! session('status_success') !!}
-        </div>
-    @endif
     <div class="card">
-		<div class="header">
-			<h4 class="title">Listado de todos los traspasos.</h4>
-		</div>
+		<div class="header flex">
+			<h4 class="title text-uppercase">Listado de traspasos | <a href="/administrador/traspasos/create">Agregar nuevo</a></h4>
+			<form action="{{asset('traspasos')}}" class="flex padding-form">
+				<select name="estatus" class="form-control margin-right-sml" id="">
+					<option value="">Selecciona un estatus</option>
+					<option value="autorizado">Autorizados</option>
+					<option value="aceptado">Aceptados</option>
+					<option value="enviado">Enviados</option>
+					<option value="proceso">En proceso</option>
+				</select>
+				<button class="btn btn-primary">Filtrar</button>
+			</form>
+		</div> <hr>
 		<div class="content table-responsive ">
 			@include('traspasos.data')
 		</div>

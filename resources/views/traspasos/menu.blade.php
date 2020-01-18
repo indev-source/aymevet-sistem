@@ -4,16 +4,19 @@
     <div class="col-md-12">
         <div class="card">
             <div class="header">
-                <h4 class="title">Menu de traspasos</h4>
+                <h4 class="title text-uppercase">Menu de traspasos</h4>
             </div>
             <div class="content">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card">
                             <div class="header">
-                                <h5 class="title">
-                                    Nuevo Traspaso
+                                <h5 class="title text-uppercase">
+                                    agregar traspaso
                                 </h5>
+                            </div>
+                            <div class="content">
+                                <img src="{{asset('transfer.png')}}" class="img-width-total heigth-300" alt="">
                             </div>
                             <div class="content">
                                 <a href="/seleccionar-sucursales" class="btn btn-success">Seleccionar Sucursal</a>

@@ -15,15 +15,7 @@ class TraspasoServices extends ServiceProvider
     public function boot()
     {
         view()->composer("*",function($view){
-            if(Auth::check()){
-                if(Auth::user()->rol != 'administrador')
-                    $traspasos = DB::select('call notificaciones_traspasos(?)',array(Auth::user()->bussine_id));
-                else
-                    $traspasos = DB::select('call notificaciones_autorizar_traspaso()');
-
-                //dd($traspasos);
-                $view->with('services_traspaso',$traspasos);
-            }
+           
 
         });
     }
