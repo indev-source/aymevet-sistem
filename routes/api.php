@@ -20,6 +20,8 @@ Route::group(['prefix'=>'v1','namespace'=>'Api\V1'],function(){
     Route::get('traspaso/{traspaso_id}','TraspasoController@products');
 
     Route::get('products/{empleado?}','ProductController@productsSyncServer');
+
+    Route::post('sincronizar/clientes','CustomerController@sincronizar');
 });
 
 Route::put('sincronizacion/{email}','SalesController@sincronizar');

@@ -30,7 +30,6 @@ class SalesController extends Controller{
     public function sales(){
         return $this->sales->sales('contado');
     }
-
     public function getSaleById($saleId){
         return $this->sales->findOrFail($saleId);
     }
@@ -119,8 +118,6 @@ class SalesController extends Controller{
             'sale','products','total','discount','dinDiscount','pay','porPay','typePay','bussine','subtotal','user'
         ));
     }
-
-
     public function show($saleId){
         $sale = $this->getSalebyid($saleId);
         $products = $sale->products()->get();

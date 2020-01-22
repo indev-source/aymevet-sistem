@@ -14,7 +14,7 @@ class Sync{
         this.db = this.firebaseObj.firestore();
     }
 
-    doSyncWithProducts(sellerId){
+    doSyncWithProducts(email){
         fetch(this.productsUrl).then(response => response.json()).then(products =>{
 
             
@@ -22,20 +22,22 @@ class Sync{
             let productsIterator = Object.entries(products);
             console.log(productsIterator);
             productsIterator.forEach(product =>{
-                product[1]['seller'] = sellerId;
-                this.doStoreToDb(product[1])
+                this.doStoreToDb(product[1],email)
             });
-            //this.doStoreToDb(products.data[1]);
         });
     }
-    doStoreToDb(data,sellerId){
-       this.db.collection('products').add(data);
+    doStoreToDb(products,email){
+       this.db.collection('products').doc(email).set(products).then(res=>{
+           console.log("resutlado")
+       }).catch(error => {
+           console.log(error);
+       });
     }
 }
 
-function sincronizar(traspasoId){
+function sincronizar(traspasoId,email){
     let sellerId = 13;
-    const PRODUCTS_URL  = "http://localhost:8000/api/v1/traspaso/"+traspasoId;
+    const PRODUCTS_URL  = "http://localhost:8001/api/v1/traspaso/"+traspasoId;
     const FIREBASE_CONFIG = {
         apiKey: "AIzaSyDo5ckC7LFvc0BpAS2V_gpFfc3MYJho8zE",
         authDomain: "eymevet-app.firebaseapp.com",
@@ -52,7 +54,7 @@ function sincronizar(traspasoId){
     sync.setFirebaseObject = firebase;
 
     sync.initializeDb();
-    sync.doSyncWithProducts(sellerId);
+    sync.doSyncWithProducts(email);
 }
 
 

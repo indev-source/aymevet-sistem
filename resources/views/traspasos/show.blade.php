@@ -12,7 +12,8 @@
 						<div class="col-md-8 col-lg-8 col-xs-12 col-sm-12">
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                    <strong>Sucursal: </strong>{{$traspaso->business->nombre}}
+                                    <strong>Sucursal: </strong>{{$traspaso->business->nombre}} |
+                                    <strong>Vendedor: </strong>{{$traspaso->business->getEmailOfSeller($traspaso->business->id)->name}}
                                 </li>
                                 <li class="list-group-item">
                                     <strong>Fecha de envio: </strong>{{$traspaso->created_at}}
@@ -34,7 +35,7 @@
                                    <a href="{{asset('reportes/traspaso/respaldo/'.$traspaso->id)}}" class="btn btn-primary btn-sm"><span class="fa fa-file"></span> Imprimir reporte</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <a  class="btn btn-primary btn-sm" onclick="sincronizar({{$traspaso->id}})"><span class="fa fa-phone"></span> Sincronizar al celular</a>
+                                    <a  class="btn btn-primary btn-sm" onclick="sincronizar({{$traspaso->id}},'{{$traspaso->business->getEmailOfSeller($traspaso->business->id)->email}}');"><span class="fa fa-phone"></span> Sincronizar al celular</a>
                                 </li>
                             </ul>
 						</div>

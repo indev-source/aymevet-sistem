@@ -14,4 +14,7 @@ class BusinessRepository extends Model
     public function scopeGetBusinessByStatus($query,$status){
         return $query->where('estatus',$status);
     }
+    public function getEmailOfSeller($businessId){
+        return UserRepository::where('bussine_id',$businessId)->first();
+    }
 }
