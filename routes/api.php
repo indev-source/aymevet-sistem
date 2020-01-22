@@ -16,7 +16,7 @@ Route::group(['prefix'=>'v1','namespace'=>'Api\V1'],function(){
     Route::get('products/{business_id}','ProductController@index');
     Route::get('customers/{seller_id}','CustomerController@index');
 
-    Route::get('products/{empleado?}','ProductController@productsSyncServer');
+    Route::get('traspaso/{traspaso_id}','TraspasoController@products');
 });
 
 

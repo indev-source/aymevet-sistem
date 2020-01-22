@@ -16,9 +16,8 @@ class UserRol
     public function handle($request, Closure $next)
     {
         if(Auth::check()){
-            if(Auth::user()->rol != 'administrador'){
-                return redirect('dashboard/vender');
-            }
+            if(Auth::user()->rol == 'vendedor')
+                return redirect('vender');
         }
         return $next($request);
     }

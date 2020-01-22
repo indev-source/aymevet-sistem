@@ -11,7 +11,6 @@
 |
 */
 
-Route::get('/','DashBoardController@index')->middleware('auth','userRol');
 
 Auth::routes();
 
@@ -30,7 +29,7 @@ Route::group(['prefix'=>'dashboard/v/admin'],function(){
 	Route::get('/producto_buscar/{filtro?}','ProductsController@searchLIKE');
 
 	Route::resource('categorias','CategoriasController');
-	Route::resource('/ventas','SalesController');
+	
 	Route::get('buscar/{filtro_venta?}','SalesController@search');
 	Route::get('filtro/{date_start?}/{date_end?}','SalesController@FilterBetweenDates');
 
@@ -78,13 +77,12 @@ Route::group(['prefix'=>'/dashboard'],function(){
 Route::post('regresar_traspaso','TraspasosController@regresar');
 
 
-Route::get('vender','DashBoardController@vender')->middleware('auth');
 
 
 
 Route::group(['prefix'=>'administrador','middleware'=>'auth'],function(){
 
-	Route::resource('productos','ProductsController');
+	
 
 	Route::get('/producto/{categoria?}','ProductsController@searchByCategory');
 	Route::resource('categorias','CategoriasController');
@@ -96,11 +94,9 @@ Route::group(['prefix'=>'administrador','middleware'=>'auth'],function(){
 	Route::get('/perfil/{id?}','UsuariosController@profile');
 	Route::resource('traspasos','TraspasosController');
 
-	Route::resource('marcas','MarcasController');
-	Route::resource('proveedores','ProveedoresController');
-	Route::resource('creditos','CreditController');
+	
 
-	Route::resource('compras','ComprasController');
+	
     Route::get('producto-compras/{compra_id}','ComprasController@productosAdd');
     Route::post('producto-compras','ComprasController@addToCompra');
     Route::put('producto-compras/{compra_id}','ComprasController@addToInventario');
@@ -122,20 +118,6 @@ Route::group(['prefix'=>'reportes'],function(){
     });
 });
 
-Route::group(['prefix'=>'vendedor','middleware'=>'auth'],function(){
-
-	Route::resource('productos','ProductsController');
-	Route::resource('/ventas','SalesController');
-	Route::get('/perfil/{id?}','UsuariosController@profile');
-	Route::resource('traspasos','TraspasosController');
-
-});
-
-Route::get('servicios','ServiciosController@index');
-Route::get('servicios/{venta_id}','ServiciosController@create');
-Route::post('servicios','ServiciosController@store');
-Route::get('servicio/{servicio_id}','ServiciosController@show');
-
 Route::get('reportes','ReportesController@index');
 Route::post('reportes/inventario','ReportesController@inventario');
 
@@ -152,28 +134,61 @@ Route::get('sincronizacion','SyncController@syncMenu');
 Route::get('perfil','UsuariosController@profile');
 Route::put('administrador/usuarios/password-update/{usuario_id}','UsuariosController@password');
 
-Route::get('productos-categoria/{categoria?}','ProductsController@category');
-Route::get('productos-marca/{marca?}','ProductsController@brand');
-Route::get('productos-proveedor/{proveedor?}','ProductsController@provider');
-Route::get('productos-sucursal/{sucursal?}','ProductsController@business');
-Route::get('filtrar','ProductsController@search');
+
 
 Route::get('ventas-menu','SalesController@menu');
-Route::get('vender','SalesController@toSell');
-Route::get('ventas-cliente/{cliente?}','SalesController@customer');
+
+
 
 //creditos
 Route::resource('pagos','PayController')->only('store','destroy');
 
-//clientes
-Route::resource('clientes', 'ClientesController');
+
 
 //traspasos
-Route::get('traspasos','TraspasosController@index');
-Route::get('traspasos-realizados','TraspasosController@realizados');
-Route::get('traspasos-recibidos','TraspasosController@recibidos');
-Route::get('traspasos-autorizados','TraspasosController@autorizados');
-Route::get('seleccionar-sucursales','TraspasosController@seleccionarSucursal');
+
+
+
+Route::get('/','Homecontroller@index')->middleware('auth','userRol');
+Route::resource('compras','ComprasController');
+Route::get('vender','SalesController@toSell');
+
+Route::group(['prefix'=>'administrador','middleware'=>['auth']], function(){
+	
+	Route::resource('productos','ProductsController');
+	Route::get('productos-categoria/{categoria?}','ProductsController@category');
+	Route::get('productos-marca/{marca?}','ProductsController@brand');
+	Route::get('productos-proveedor/{proveedor?}','ProductsController@provider');
+	Route::get('productos-sucursal/{sucursal?}','ProductsController@business');
+	Route::get('filtrar','ProductsController@search');
+
+	Route::resource('clientes', 'ClientesController');
+	Route::resource('marcas','MarcasController');
+	Route::resource('proveedores','ProveedoresController');
+	Route::resource('creditos','CreditController');
+
+	Route::resource('traspasos','TraspasosController');
+	Route::put('finish-transfer','TraspasosController@finishTransfer');
+	Route::post('product-add','TraspasosController@storeProducts');
+	Route::put('traspasos/autorizar/{traspaso_id}','TraspasosController@autorizar');
+
+	Route::resource('/ventas','SalesController');
+	Route::get('ventas-cliente/{cliente?}','SalesController@customer');
+});
+
+Route::group(['prefix'=>'mi-sucursal','middleware'=>'auth'],function(){
+	Route::get('/','MyBusinessController@index');
+	Route::get('productos','MyBusinessController@products');
+	Route::get('ventas','MyBusinessController@sales');
+	Route::get('clientes','MyBusinessController@customers');
+	Route::get('traspasos','MyBusinessController@traspasos');
+	Route::put('traspasos/aceptar/{traspaso_id}','MyBusinessController@aceptedTraspaso');
+});
+
+Route::group(['prefix'=>'reportes','middleware'=>'auth'],function(){
+	Route::get('traspaso/respaldo/{traspasoid}','ReportesController@traspaso');	
+});
+
 
 
 

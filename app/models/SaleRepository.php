@@ -5,6 +5,7 @@ namespace App\models;
 use App\Sale;
 use Illuminate\Database\Eloquent\Model;
 use Auth;
+use DB;
 class SaleRepository extends Model
 {
     protected $table = "ventas";
@@ -43,6 +44,13 @@ class SaleRepository extends Model
             $product->save();
         }
     }
+    public function addStock($products){
+        foreach($products as $productSold){
+            $product = ProductRepository::findOrFail($productSold->product_id);
+            $product->existencia +=  $productSold->cantidad;
+            $product->save();
+        }
+    }
     public function getOrCreateSale($saleId){
         if($saleId)
             return $this->getSaleById($saleId);
@@ -65,13 +73,29 @@ class SaleRepository extends Model
         return $query->getSalesByTypeSale($typeSale)->saleEnded();
     }
     public function scopeGetSalesByTypeSale($query,$typeSale){
-        return $query->where('tipo_venta',$typeSale);
+        return $query->where('ventas.tipo_venta',$typeSale);
     }
     public function scopeSaleEnded($query){
-        return $query->where('estatus','terminado');
+        return $query->where('ventas.estatus','pagado');
     }
     public function scopeCustomers($query,$customerId){
         return $query->where('cliente',$customerId);
+    }
+    public function scopeBusiness($query,$business){
+        return $query->where('sucursal',$business);
+    }
+    public function scopeGanancias($query,$total,$inversion){
+        return (double) $total - $inversion;
+    }
+    public function scopeTotalSales($query){
+        return (double) $query->join('producto_ventas','ventas.id','producto_ventas.sale_id')->sum('producto_ventas.subtotal');
+    }
+    public function scopeInversion($query){
+        return (double)$query->join('producto_ventas','ventas.id','producto_ventas.sale_id')->join('inventarios','producto_ventas.product_id','inventarios.id')
+        ->select(DB::raw('sum(inventarios.costo*producto_ventas.cantidad) as inversion'))->first()->inversion;
+    }
+    public function scopeSalesToday($query){
+        return $query->whereDate('ventas.fecha',NOW());
     }
 
 }

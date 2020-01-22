@@ -1,5 +1,5 @@
 @extends('layouts.dashboard.dashboard')
-@section('title','Empleados')
+@section('title','Compras')
 @section('content')
     <div class="col-md-12">
         @if (session('status_success'))

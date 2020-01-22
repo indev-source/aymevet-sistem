@@ -19,17 +19,9 @@ use DB;
 class DashBoardController extends Controller{
 
     public function index(){
-    	$users    = User::countUsers();
-    	$products = Product::countProducts();
-    	$categories = Category::countCategories();
-        $bussines   = Bussine::count();
-        $brands     = Marca::count();
-        $providers  = Proveedor::count();
-        $clientes   = Cliente::count();
-
-        $grafica    = DB::select('call grafica_ventas(?)',array(Carbon::now()->format('Y-m-d')));
+    
         //return $grafica;
-    	return view('dashboard.index',compact('users','products','categories','bussines','grafica','brands','providers','clientes'));
+    	return view('dashboard.index');
     }
     public function vender(){
        

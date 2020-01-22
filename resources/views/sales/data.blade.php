@@ -1,6 +1,6 @@
 <table id="data" class="table table-striped table-bordered">
     <thead>
-        <th class="text-center">FOL</th>
+        <th class="text-center">FOLIO</th>
         <th class="text-center">Total</th>
         <th class="text-center">Vendedor</th>
         <th class="text-center">Cliente</th>
@@ -22,7 +22,7 @@
             <td class="text-center">{{$sale->fecha}}</td>
             <td class="text-center">{{$sale->estatus}}</td>
             <td class="text-center">
-                <a href="{{asset(Auth::user()->rol.'/ventas/'.$sale->id)}}" class="btn btn-success btn-sm">Detalle</a>
+                <a href="{{asset('administrador/ventas/'.$sale->id)}}" class="btn btn-success btn-sm">Detalle</a>
             </td>
         </tr>
     @endforeach

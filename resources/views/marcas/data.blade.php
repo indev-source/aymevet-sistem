@@ -11,7 +11,7 @@
                 </td>
 				<td class="text-center">
                 	<a href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/marcas/'.$brand->id.'/edit' : '#')}}" class="btn btn-primary btn-sm"><span class="fa fa-edit"></span> Actualizar</a>
-					<a href="{{asset('productos-marca?marca='.$brand->id)}}" class="btn btn-info btn-sm"> <span class="fa fa-shopping-basket"></span> Productos</a>
+					<a href="{{asset('administrador/productos-marca?marca='.$brand->id)}}" class="btn btn-info btn-sm"> <span class="fa fa-shopping-basket"></span> Productos</a>
 				</td>
 			</tr>
 		@endforeach

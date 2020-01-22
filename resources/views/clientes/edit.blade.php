@@ -2,24 +2,12 @@
 @section('title','Clientes')
 @section('content')
     <div class="col-md-12">
-        @if (session('status_success'))
-            <div class="alert alert-success">
-                {!! session('status_success') !!}
-            </div>
-        @endif
-        @if (session('status_warning'))
-            <div class="alert alert-warning">
-                {!! session('status_warning') !!}
-            </div>
-        @endif
         <div class="card">
             <div class="header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
-                <h4 class="title">
-                    Actualizar Cliente
-                </h4>
+                <h4 class="title text-uppercase">Actualizar datos del cliente</h4>
             </div>
             <div class="content">
-                <form action="{{asset('clientes/'.$customer->id)}}" method="post">
+                <form action="{{asset('administrador/clientes/'.$customer->id)}}" method="post">
                     @csrf
                     {{method_field('put')}}
                     <div class="form-group">

@@ -12,7 +12,7 @@
 			<h4 class="title">Listado de marcas</h4>
 			<p class="category">
 				@if(Auth::user()->rol == 'administrador')
-					<a class="btn btn-success btn-sm" href="{{asset(Auth::user()->rol.'/marcas/create')}}">Agregar marca</a>
+					<a class="btn btn-success btn-sm" href="{{asset('administrador/marcas/create')}}">Agregar marca</a>
 				@endif
 			</p>
 		</div>

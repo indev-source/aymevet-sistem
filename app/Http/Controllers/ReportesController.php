@@ -14,10 +14,18 @@ use App\Sale;
 use DB;
 use League\OAuth2\Server\RequestEvent;
 
+use App\models\TraspasoRepository;
 class ReportesController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+    }
+
+    public function traspaso($traspasoId){
+        $traspaso =  TraspasoRepository::findOrFail($traspasoId);
+        $products =  $traspaso->products()->get();
+        $pdf = \PDF::loadView('reportes.traspasos.reporte_respaldo',compact('traspaso','products'));
+        return $pdf->download('traspaso_'.now()->format('y-m-d HH:mm:ss').'.pdf');
     }
 
     public function inventarioGeneral(){

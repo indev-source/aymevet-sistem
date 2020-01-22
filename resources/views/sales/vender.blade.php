@@ -28,11 +28,6 @@
 		</div>
 	</div>
 	<div class="col-lg-4">
-		@if (session('customer_status'))
-			<div class="alert alert-danger">
-				{!! session('customer_status') !!}
-			</div>
-		@endif
 		<form action="{{asset('dashboard/venta/')}}" method="post">
 		<div class="card" style="border:1px solid rgba(0,0,0,.4) !important;">
 			<div class="content">

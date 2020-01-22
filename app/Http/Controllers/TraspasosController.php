@@ -14,54 +14,92 @@ use App\User;
 use App\models\TraspasoRepository;
 use App\models\BusinessRepository;
 use App\models\ProductRepository;
+use App\models\ProductTraspasoRepository;
 class TraspasosController extends Controller{
 
-    public function __construct(TraspasoRepository $traspaso, ProductRepository $product){
+    public function __construct(TraspasoRepository $traspaso, ProductRepository $product,ProductTraspasoRepository $productTraspaso){
         $this->traspaso = $traspaso;
         $this->product  = $product;
+        $this->productTraspaso = $productTraspaso;
+        $this->middleware('userRol')->except(['create','storeProducts','finishTransfer']);
+    }
+    public function getTraspasoById($transferId){
+        return $this->traspaso->findOrFail($transferId);
+    }
+    public function addProductsToBusiness($products,$busineId){
+        foreach($products as $productToTransfer){
+            $product = ProductRepository::findOrFail($productToTransfer->product_id);
+            $product->bussine_id = $busineId;
+            $product->existencia = $productToTransfer->cantidad;
+            
+            $isRegisterProduct = ProductRepository::where('bussine_id',$busineId)->where('codigo',$product->codigo)->first();
+            
+            if((boolean) $isRegisterProduct){
+                $isRegisterProduct->existencia += $productToTransfer->cantidad;
+                $isRegisterProduct->save();
+            }else{
+                ProductRepository::create($product->toArray());
+            }
+            
+            $product = ProductRepository::findOrFail($productToTransfer->product_id);
+            $product->existencia -= $productToTransfer->cantidad;
+            $product->save();
+        }
     }
     public function index(Request $request){
         $traspasos = $this->traspaso->traspasos()->getByStatus($request->estatus)->get();
         return view('traspasos.index',compact('traspasos'));
     }
     public function create(){
+        $traspasoId = \Session::get('traspasoId');
+        $traspaso    = $this->traspaso->getOrCreateTraspaso($traspasoId);
+        \Session::put('traspasoId',$traspaso->id);
+
+        $productsInTransfers = $traspaso->products()->get();
+
         $products = $this->product->getProducts('activos')->business(Auth::user()->bussine_id)->get();
-        return view('traspasos.create',['business'=>BusinessRepository::all(),'products'=>$products]);
+        return view('traspasos.create',['business'=>BusinessRepository::all(),'products'=>$products,'productsInTransfers'=>$productsInTransfers]);
     }
-    public function show($id){
-        $traspaso = Traspaso::find($id);
-        $products = ProductoTraspaso::products($traspaso->id)->get();
+    public function storeProducts(Request $request){
+       
+        $traspasoId = \Session::get('traspasoId');
+
+        //actualizar el request con el traspaso creado u obtenido
+        $request['traspaso_id'] = $traspasoId;
+
+        //verificar que el producto esta en el traspaso
+        $product = $this->productTraspaso->isTheProductInTransfer($request->producto_id);
+
+        if($product)
+            $product->editProductIntransfer($request->all());
+        else
+            $this->productTraspaso->addProduct($request->all());
+        
+        alert()->success('El producto fue agregado exitosamente');
+        
+        return back();
+    }
+    public function finishTransfer(Request $request){
+        $transferId = \Session::get('traspasoId');
+        $traspaso = $this->getTraspasoById($transferId);
+        $traspaso->finish($request->sucursal_id);
+        alert()->success('El traspasos fue enviado exitosamente');
+        \Session::remove('traspasoId');
+        return redirect('/traspasos');
+    }
+    public function show($traspasoId){
+        $traspaso =  $this->traspaso->getOrCreateTraspaso($traspasoId);
+        $products =  $traspaso->products()->get();
         return view('traspasos.show',compact('traspaso','products'));
     }
-    public function autorizar(Request $request,$traspasoID){
-        $traspaso = Traspaso::find($traspasoID);
-        $products = ProductoTraspaso::products($traspaso->id)->select('cantidad','producto_id')->get();
-        foreach ($products as $product_traspaso) {
-            try{
-                //buscar producto en la sucursal que recibe
-                $producto = Product::find($product_traspaso->producto_id);
-                $producto_existe_sucursal = Product::issetOnBusine($producto->code,$traspaso->recibe)->first();
-                if($producto_existe_sucursal != null){
-                    //Actualizo
-                    $producto_existe_sucursal->existencia += $product_traspaso->cantidad;
-                    $producto_existe_sucursal->save();
-                    $producto->existencia -= $product_traspaso->cantidad;
-                    $producto->save();
-                }else{
-                    $producto = Product::find($product_traspaso->producto_id);
-                    $newProduct = Product::addProductForTransfers($producto,$traspaso,$product_traspaso);
-                    $producto->existencia -=$product_traspaso->cantidad;
-                    $producto->save();
-                }
-            }catch(\Exception $e){
-                return back()->with('status_daner',$e->getMessage());
-            }
+    public function autorizar(Request $request,$traspasoId){
+        $traspaso =  $this->getTraspasoById($traspasoId);
+        $products = $traspaso->products()->get();
 
-        }
-        $traspaso->estatus = "autorizado";
-        $traspaso->save();
-        $msg = "los productos fueros agregados a la sucursal: ".$traspaso->srecibe->nombre." satisfactoriamente";
-        return back()->with("status_success",$msg);
+        $this->addProductsToBusiness($products,$traspaso->sucursal_id);
+        $traspaso->autorizar();
+        alert()->success('El traspaso fue autorizado exitosamente');
+        return back();
     }
     public function store(Request $request){
         $traspaso = new Traspaso;

@@ -33,7 +33,7 @@
 								<a href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/categorias/'.$category->id.'/edit' : '#')}}" class="btn btn-primary btn-sm">
 									<span class="fa fa-edit"></span> Actualizar
 								</a>
-								<a href="{{asset('productos-categoria?categoria='.$category->id)}}" class="btn btn-info btn-sm"> <span class="fa fa-shopping-basket"></span> Productos</a>
+								<a href="{{asset('administrador/productos-categoria?categoria='.$category->id)}}" class="btn btn-info btn-sm"> <span class="fa fa-shopping-basket"></span> Productos</a>
 							</td>
 						</tr>
 					@endforeach

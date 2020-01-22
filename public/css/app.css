@@ -101,7 +101,7 @@
 .img-width-total{
   width: 100%;
 }
-.img-width-middle{
+.img-round{
   width: 30%;
   margin:auto;
 }
@@ -122,4 +122,8 @@
 
 .cursor-pointer{
   cursor:pointer;
+}
+
+.icon-lg{
+  font-size:5em;
 }

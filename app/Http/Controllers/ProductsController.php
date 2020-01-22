@@ -14,7 +14,7 @@ class ProductsController extends Controller{
         $this->products = $products;
         $this->select = ['id','nombre','existencia','costo','categoria_id','marca_id','proveedor_id','bussine_id'];
         $this->activos = 'activos';
-        $this->middleware('userRol')->except(['index']);
+        $this->middleware('userRol');
     }
     public function products(){
         return $this->products->getProducts($this->activos)->select($this->select);
@@ -35,7 +35,7 @@ class ProductsController extends Controller{
     }
     //metodo que obtiene todos los productos por la marca seleccionada
     public function brand(Request $request, BrandRepository $brandObj){
-        $products  =   $this->products()->brand($request->marca)->get();
+        $products  = $this->products()->brand($request->marca)->get();
         return view('products.index',['products'=>$products,'msg'=>'Productos por marca']);
     }
     //metodo que obtiene todos los productos por el proveedor seleccionado

@@ -24,12 +24,16 @@
 										<tr>
 											<td class="text-center">{{$product->nombre}}</td>
 											<td class="text-center">{{$product->existencia}}</td>
-											<td class="text-center">
-												<input type="text" class="form-control" name="cantidad" placeholder="Cantidad a traspasar">
-											</td>
-											<td class="text-center">
-												<button class="btn btn-primary"><span class="fa fa-plus"></span> Agregar</button>
-											</td>
+											<form action="{{asset('administrador/product-add')}}" method="post">
+												@csrf
+												<input type="hidden" name="producto_id" value="{{$product->id}}">
+												<td class="text-center">
+													<input type="text" class="form-control" name="cantidad" placeholder="Cantidad a traspasar">
+												</td>
+												<td class="text-center">
+													<button type="submit" class="btn btn-primary"><span class="fa fa-plus"></span> Agregar</button>
+												</td>
+											</form>
 										</tr>
 									@endforeach
 								</tbody>
@@ -37,9 +41,28 @@
 						</div>
 						<div class="col-md-4 col-lg-4 col-sm-12 col-xs-12">
 							<h4 class="text-center text-uppercase">Productos agregados al traspaso</h4>
+							
+							<form action="{{asset('administrador/finish-transfer')}}" method="post">
+								@csrf
+								{{method_field('put')}}
+								<div class="form-group">
+									<select class="form-control" required name="sucursal_id" id="">
+										<option value="">Seleccionar sucursal</option>
+										@foreach($business as $bs)
+											<option value="{{$bs->id}}">{{$bs->nombre}}</option>
+										@endforeach
+									</select>
+								</div>
+								<button type="submit" @if($productsInTransfers->count() == 0) disabled @endif class="btn btn-primary">Terminar traspaso</button>
+							</form>
 							<hr>
 							<ul class="list-group">
+								@foreach($productsInTransfers as $product)
+									<li class="list-group-item">
 								
+										<strong>Producto: </strong>{{$product->nombre}} | <strong>Cantidad: </strong>{{$product->cantidad}}
+									</li>
+								@endforeach
 							</ul>
 						</div>
 					</div>

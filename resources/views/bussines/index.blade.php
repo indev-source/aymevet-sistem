@@ -33,7 +33,7 @@
 							<td class="text-center">{{$bs->tarjeta}}%</td>
 							<td class="text-center">
 								<a class="btn btn-primary btn-sm" href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/sucursales/'.$bs->id.'/edit' : '#')}}" ><span class="fa fa-edit"></span> Actualizar</a>
-								<a class="btn btn-info btn-sm" href="{{asset(Auth::user()->rol == 'administrador' ? 'productos-sucursal?sucursal='.$bs->id : '#')}}" ><span class="fa fa-shopping-basket"></span> Productos</a>
+								<a class="btn btn-info btn-sm" href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/productos-sucursal?sucursal='.$bs->id : '#')}}" ><span class="fa fa-shopping-basket"></span> Productos</a>
 								<a class="btn btn-info btn-sm" href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/sucursales/'.$bs->id.'/edit' : '#')}}" ><span class="fa fa-money"></span> Ventas</a>
 								<a class="btn btn-info btn-sm" href="{{asset(Auth::user()->rol == 'administrador' ? 'administrador/sucursales/'.$bs->id.'/edit' : '#')}}" ><span class="fa fa-undo"></span> Traspasos</a>
 							</td>

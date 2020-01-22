@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use DB;
-use Auth;
+use App\models\TraspasoRepository;
 class TraspasoServices extends ServiceProvider
 {
     /**
@@ -14,9 +13,8 @@ class TraspasoServices extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer("*",function($view){
-           
-
+        view()->composer("traspaso.create",function($view){
+          
         });
     }
 

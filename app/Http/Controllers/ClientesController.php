@@ -14,13 +14,25 @@ class ClientesController extends Controller{
 
     public function __construct(CustomerRepository $customers){
         $this->customers = $customers;
+        $this->middleware('userRol')->except(['create','show','store','edit','update']);
     }
     public function getCustomerByid($customerId){
         return $this->customers->findOrFail($customerId);
     }
     public function index(){
-        $clientes = $this->customers->getCustomers()->get();
-        return view('clientes.index',compact('clientes'));
+        $customers = $this->customers->getCustomers()->get();
+        return view('clientes.index',compact('customers'));
+    }
+    public function create(){
+        return view('clientes.create');
+    }
+    public function store(Request $request){
+        $request['vendedor_id'] = Auth::user()->id;
+        $this->customers->addCustomer($request->all());
+        alert()->success('El cliente fue registrador correctamente');
+        if (Auth::user()->rol == 'administrador')
+            return redirect('/administrador/clientes');
+        return redirect('mi-sucursal/clientes');
     }
     public function show($id)
     {
@@ -34,18 +46,14 @@ class ClientesController extends Controller{
     public function update(Request $request, $customerId){
         try {
             $this->getCustomerByid($customerId)->editCustomer($request->all());
-            return redirect('/clientes')->with('status_success','Cliente actualizado correctamente');
+            alert()->success('El cliente fue actualizado correctamente');
+            if (Auth::user()->rol == 'administrador')
+                return redirect('/administrador/clientes');
+            return redirect('mi-sucursal/clientes');
         }catch (\Exception $e){
             return back()->with('status_warning',$e->getMessage());
         }
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

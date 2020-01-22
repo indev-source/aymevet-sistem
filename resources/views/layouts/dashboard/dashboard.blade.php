@@ -39,110 +39,7 @@
                         AYMEVET
                         </a>
                     </div>
-                    <ul class="nav">
-                        @if(Auth::user()->rol == 'administrador')
-                        <li @if(Request::is('/')) class="active" @endif>
-                        <a href="{{asset('/')}}">
-                            <i class="ti-home"></i>
-                            <p>INICIO</p>
-                        </a>
-                        </li>
-                        @endif
-                        <li @if(Request::is('vender')) class="active" @endif>
-                        <a href="{{asset('/vender')}}">
-                            <i class="ti-shopping-cart"></i>
-                            <p>VENDER</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is(Auth::user()->rol.'/ventas')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/ventas')}}">
-                            <i class="ti-money"></i>
-                            <p>VENTAS</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is('clientes')) class="active" @endif>
-                        <a href="{{asset('/clientes')}}">
-                            <i class="ti-user"></i>
-                            <p>CLIENTES</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is('administrador/creditos')) class="active" @endif>
-                        <a href="{{asset('/administrador/creditos')}}">
-                            <i class="ti-user"></i>
-                            <p>CREDITOS</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is(Auth::user()->rol.'/productos')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/productos')}}">
-                            <i class="ti-bag"></i>
-                            <p>INVENTARIO</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is(Auth::user()->rol.'/proveedores')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/proveedores')}}">
-                            <i class="ti-user"></i>
-                            <p>PROVEEDORES</p>
-                        </a>
-                        </li>
-                        <li @if(Request::is('reportes')) class="active" @endif>
-                            <a href="{{asset('reportes')}}">
-                                <i class="ti-file"></i>
-                                <p>REPORTES</p>
-                            </a>
-                        </li>
-                        <li @if(Request::is('administrador/compras')) class="active" @endif>
-                            <a href="{{asset(Auth::user()->rol.'/compras')}}">
-                                <i class="ti-share"></i>
-                                <p>COMPRAS</p>
-                            </a>
-                        </li>
-                        @if(Auth::user()->rol == 'administrador')
-                        <li @if(Request::is(Auth::user()->rol.'/sucursales')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/sucursales')}}">
-                            <i class="ti-home"></i>
-                            <p>SUCURSALES</p>
-                        </a>
-                        </li>
-                        @endif
-                        @if(Auth::user()->rol == 'administrador')
-                            <li @if(Request::is(Auth::user()->rol.'/usuarios')) class="active" @endif>
-                            <a href="{{asset(Auth::user()->rol.'/usuarios')}}">
-                                <i class="ti-user"></i>
-                                <p>EMPLEADOS</p>
-                            </a>
-                            </li>
-                        @endif
-                        <li>
-                            <a href="{{asset('menu-traspasos')}}">
-                                <i class="ti-share"></i>
-                                <p>
-                                TRASPASOS
-                               
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/">
-                                <i class="ti-share-alt"></i>
-                                <p>DEVOLUCIONES</p>
-                            </a>
-                        </li>
-                        @if(Auth::user()->rol == 'administrador')
-                        <li @if(Request::is(Auth::user()->rol.'/categorias')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/categorias')}}">
-                            <i class="ti-rss"></i>
-                            <p>CATEGORIAS</p>
-                        </a>
-                        </li>
-                        @endif
-                        @if(Auth::user()->rol == 'administrador')
-                        <li @if(Request::is(Auth::user()->rol.'/marcas')) class="active" @endif>
-                        <a href="{{asset(Auth::user()->rol.'/marcas')}}">
-                            <i class="ti-rss"></i>
-                            <p>MARCAS</p>
-                        </a>
-                        </li>
-                        @endif
-                    </ul>
+                    @include('shared.nav')
                 </div>
             </div>
             <div class="main-panel">
@@ -179,7 +76,7 @@
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a href="">
-                                            <i class="ti-home"></i> Sucursal {{Auth::user()->bussine->nombre}}
+                                            <i class="ti-home"></i>{{Auth::user()->bussine->nombre}}
                                             </a>
                                         </li>
                                         <li>
@@ -228,69 +125,7 @@
                 </footer>
             </div>
         </div>
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="title">Inventario {{Auth::user()->bussine->nombre}}</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="content table-responsive ">
-                            <table id="data" class="table table-striped">
-                                <thead>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Precios</th>
-                                    <th class="text-center">Stock</th>
-                                    <th class="text-center">
-                                        Cantidad
-                                    </th>
-                                    <th class="text-center">Acciones</th>
-                                </thead>
-                                <tbody>
-                                    @foreach($products_bussine as $product)
-
-                                            <tr>
-                                                <td class="text-center">
-                                                   {{$product->nombre}}
-                                                </td>
-                                        <form action="{{asset('dashboard/orden/producto/inventario')}}" method="post">
-                                            <td class="text-center">
-                                                <select required="" class="form-control" name="price" id="">
-                                                    <option value="">Selecciona un precio</option>
-                                                    <option value="{{$product->precio1}}">1.${{number_format($product->precio1,2,'.',',')}}</option>
-                                                    <option value="{{$product->precio2}}">2.${{number_format($product->precio2,2,'.',',')}}</option>
-                                                    <option value="{{$product->precio3}}">3.${{number_format($product->precio3,2,'.',',')}}</option>
-                                                </select>
-                                            </td>
-                                            <td class="text-center">
-                                                @if($product->stock >5)
-                                                    <span class="label label-success">{{$product->stock}}</span>
-                                                @else
-                                                    <span class="label label-danger">{{$product->stock}}</span>
-                                                @endif
-                                            </td>
-                                            @csrf
-                                            <input type="hidden" name="product_id" value="{{$product->id}}">
-                                            <td class="text-center">
-                                                <input type="number" max="{{$product->stock}}" @if($product->stock == 0) disabled=""  @endif class="form-control" name="cantidad" value="1">
-                                            </td>
-                                            <td class="text-center">
-                                                @if($product->stock >0)
-                                                    <button type="submit" class="btn btn-success btn-sm">Agregar producto</button>
-                                                @else
-                                                    <a class="btn btn-danger btn-sm">No hay en existencia</a>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        </form>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @include('shared.products')
         @include('reportes.modales.inventario')
         @include('reportes.modales.ventas')
         @include('reportes.modales.ventas-fecha')

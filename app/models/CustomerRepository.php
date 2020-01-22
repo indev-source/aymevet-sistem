@@ -13,7 +13,9 @@ class CustomerRepository extends Model
     public function seller(){
         return $this->belongsTo('App\models\UserRepository','vendedor_id');
     }
-
+    public function addCustomer($data){
+        return CustomerRepository::create($data);
+    }
     public function editCustomer($data){
         return $this->fill($data)->save();
     }

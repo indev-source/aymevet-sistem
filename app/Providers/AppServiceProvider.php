@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Product;
+use App\models\ProductRepository;
 use Auth;
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,11 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        // servicio que me obtiene los productos por sucursal
         view()->composer("*",function($view){
             if(Auth::check()){
-                $products_bussine = Product::procedureProductsByBussine(Auth::user()->bussine_id);
-                $products_all     = Product::procedureIndex();
-                $view->with('products_bussine',$products_bussine);
+                $product = new ProductRepository();
+                $productsByBusiness = $product->getProducts()->business(Auth::user()->bussine_id)->get();
+                $view->with('productsByBusiness',$productsByBusiness);
             }
 
         });

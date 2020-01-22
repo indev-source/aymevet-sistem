@@ -23,11 +23,14 @@ use App\models\CreditRepository;
 class SalesController extends Controller{
 
     public function __construct(SaleRepository $sales){
-        $this->middleware('auth');
+      $this->middleware('userRol')->except(['show','customer','toSell','store']);
         $this->sales = $sales;
     }
     public function sales(){
         return $this->sales->sales('contado');
+    }
+    public function getSaleById($saleId){
+        return $this->sales->findOrFail($saleId);
     }
     public function index(){
         $sales = $this->sales()->get();
@@ -37,24 +40,27 @@ class SalesController extends Controller{
         $sales = $this->sales()->customers($request->cliente)->get();
         return view('sales.index',['sales'=>$sales,'msg'=>'Ventas por cliente']);
     }
-    public function toSell(SaleRepository $saleObj){
+    public function toSell(){
         $saleId = \Session::get ('orderID');
-        $sale   = $saleObj->getOrCreateSale($saleId);
+        $sale   = $this->sales->getOrCreateSale($saleId);
         \Session::put('orderID',$sale->id);
         $products  =  $sale->products()->get();
-        $customers = CustomerRepository::getCustomers()->get();
+        if(Auth::user()->rol == 'administrador')
+            $customers = CustomerRepository::getCustomers()->get();
+        else
+            $customers = CustomerRepository::getCustomersBySeller(Auth::user()->id)->get();
         $total     = $sale->total();
         return view('sales.vender',compact('products','sale','customers','total'));
     }
-    public function store(Request $request, SaleRepository  $saleObj, CreditRepository $credit){
+    public function store(Request $request, CreditRepository $credit){
 
         $saleId = \Session::get ('orderID');
 
-        $sale = $saleObj->getSaleById($saleId);
+        $sale = $this->getSaleById($saleId);
         
         $sale->total = $sale->total();
         $sale->tipo_venta = $request->tipo_venta;
-        $sale->estatus    = "terminado";
+        $sale->estatus    = "pagado";
         $sale->cliente    = $request->cliente;
         $sale->save();
 
@@ -107,64 +113,21 @@ class SalesController extends Controller{
             'sale','products','total','discount','dinDiscount','pay','porPay','typePay','bussine','subtotal','user'
         ));
     }
-    public function pagoCredito($request){
-        $cliente = Cliente::find($request->cliente_id);
-        if($cliente->estatus == "deuda")
-            return self::customerWithDeuda($cliente);
-        else
-            return self::pago($request,"credito","debe");
-    }
-    public function customerWithDeuda($cliente){
-        return back()->with('customer_status',"El cliente: ".$cliente->nombre_completo." tiene adeudos");
-    }
-    public function pago($request,$formaPago,$status){
-        $sale = Sale::getOrCreateSale(\Session::get('orderID'));
-        \Session::put('orderID',$sale->id);
 
-        $sale->tipoPago = $request->tipo_pago;
-        $sale->cliente  = $request->cliente_id;
-        $sale->total    = $sale->subtotal();
-        $sale->formaPago = $formaPago;
-        $sale->estatus   = $status;
-        $sale->save();
-        if($formaPago == 'credito'){
-          $credito = new Credit();
-          $credito->user = $sale->vendedor;
-          $credito->sale = $sale->id;
-          $credito->date = now();
-          $credito->client = $request->cliente_id;
-          $credito->status = "no-pagado";
-          $credito->total  = $sale->total;
-          $credito->debe   = $sale->total;
-          $credito->save();
-
-          $cliente = Cliente::find($request->cliente_id);
-          $cliente->estatus = "deuda";
-          $cliente->save();
-        }
-        self::quitarInventario($sale);
-        \Session::remove('orderID');
-        return back();
-    }
-    public function quitarInventario($sale){
-        foreach($sale->products()->get() as $product){
-            $productToUpdate = Product::find($product->productoID);
-            $productToUpdate->existencia -= $product->cantidad;
-            $productToUpdate->save();
-        }
-        return back();
-    }
-
-    public function show($id){
-        $sale = Sale::find($id);
+    public function show($saleId){
+        $sale = $this->getSalebyid($saleId);
         $products = $sale->products()->get();
         return view('sales.show',compact('sale','products'));
     }
     public function destroy($id)
     {
-        $sale = Sale::find($id);
+        $sale = $this->getSaleById($saleId);
         $sale->status = "cancelado";
         $sale->save();
+
+        $products = $sale->products()->get();
+
+        $sale->addStock($products);
 
         //regresar al inventario
         $products_sale = ProductOrder::join('inventarios','product_orders.product_id','inventarios.id')
