@@ -145,6 +145,7 @@ Route::resource('pagos','PayController')->only('store','destroy');
 
 
 
+
 //traspasos
 
 

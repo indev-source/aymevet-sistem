@@ -23,14 +23,20 @@ use App\models\CreditRepository;
 class SalesController extends Controller{
 
     public function __construct(SaleRepository $sales){
-      $this->middleware('userRol')->except(['show','customer','toSell','store']);
+
+        $this->middleware('auth',['except'=>'sincronizar']);
         $this->sales = $sales;
     }
     public function sales(){
         return $this->sales->sales('contado');
     }
+
     public function getSaleById($saleId){
         return $this->sales->findOrFail($saleId);
+    }
+    public function sincronizar(Request $request,$sellerEmail){
+        return response()->json($request,201);
+
     }
     public function index(){
         $sales = $this->sales()->get();
@@ -114,38 +120,21 @@ class SalesController extends Controller{
         ));
     }
 
+
     public function show($saleId){
         $sale = $this->getSalebyid($saleId);
         $products = $sale->products()->get();
         return view('sales.show',compact('sale','products'));
     }
-    public function destroy($id)
-    {
-        $sale = $this->getSaleById($saleId);
-        $sale->status = "cancelado";
-        $sale->save();
+    public function destroy($id){
 
-        $products = $sale->products()->get();
+        $sale = $this->getSaleById($id);
+        
+        $sale->changeToStatus('cancelado');
 
-        $sale->addStock($products);
-
-        //regresar al inventario
-        $products_sale = ProductOrder::join('inventarios','product_orders.product_id','inventarios.id')
-        ->where('product_orders.order_id',$sale->order_id)
-        ->select(
-            'inventarios.nombre as producto',
-            'product_orders.amount',
-            'inventarios.id'
-        )->get();
-
-
-
-        foreach ($products_sale as $product_sale) {
-            $product = Product::find($product_sale->id);
-            $product->existencia +=$product_sale->amount;
-            $product->save();
-        }
-        return back();
+        $sale->addToStock($sale->products()->get());
+        
+        return redirect('administrador/ventas/'.$id)->with('status_success','La venta fue actualizada correctamente');
     }
 
     public function reporte_venta_dia(){

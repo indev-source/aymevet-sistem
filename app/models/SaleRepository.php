@@ -44,7 +44,7 @@ class SaleRepository extends Model
             $product->save();
         }
     }
-    public function addStock($products){
+    public function addToStock($products){
         foreach($products as $productSold){
             $product = ProductRepository::findOrFail($productSold->product_id);
             $product->existencia +=  $productSold->cantidad;
@@ -96,6 +96,10 @@ class SaleRepository extends Model
     }
     public function scopeSalesToday($query){
         return $query->whereDate('ventas.fecha',NOW());
+    }
+    public function changeToStatus($status){
+        $this->estatus = $status;
+        return $this->save();
     }
 
 }

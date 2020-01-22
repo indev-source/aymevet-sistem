@@ -5,8 +5,14 @@
 			<a href="{{asset('dashboard/venta?ticket='.$sale->id)}}" class="btn btn-xs btn-success">Reimprimir ticket</a>
 			@if(Auth::user()->rol == 'administrador' and $sale->status != 'cancelado')
 				
+			@if(Auth::user()->rol == 'administrador' and $sale->estatus != 'cancelado')
+				<form action="{{asset('dashboard/v/admin/ventas/'.$sale->id)}}" method="post" style="display: inline-block;">
+					@csrf
+					{{method_field('delete')}}
+					<button type="submit" class="btn btn-xs btn-danger">Cancelar venta</button>
+				</form>
 			@endif
-			@if($sale->status == 'cancelado')
+			@if($sale->estatus == 'cancelado')
 				<span class="label label-danger">Venta canceladas, los productos fuerón regresados al inventario</span>
 			@endif
 		</h3>
